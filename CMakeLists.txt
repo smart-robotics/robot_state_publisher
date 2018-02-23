@@ -7,7 +7,19 @@ find_package(orocos_kdl REQUIRED)
 find_package(catkin REQUIRED
   COMPONENTS roscpp rosconsole rostime tf tf2_ros tf2_kdl kdl_parser
 )
-find_package(Eigen3 REQUIRED)
+
+find_package(Eigen3 QUIET)
+if(NOT EIGEN3_FOUND)
+  find_package(cmake_modules REQUIRED)
+  find_package(Eigen REQUIRED)
+  set(EIGEN3_INCLUDE_DIRS ${EIGEN_INCLUDE_DIRS})
+endif()
+
+# Note that eigen 3.2 (on Ubuntu Wily) only provides EIGEN3_INCLUDE_DIR,
+# not EIGEN3_INCLUDE_DIRS, so we have to set the latter from the former.
+if(NOT EIGEN3_INCLUDE_DIRS)
+  set(EIGEN3_INCLUDE_DIRS ${EIGEN3_INCLUDE_DIR})
+endif()
 
 find_package(urdfdom_headers REQUIRED)
 
